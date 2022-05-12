@@ -4,12 +4,14 @@ import {
   useMetamask,
   useSigner,
 } from "@thirdweb-dev/react";
-import { ContractType, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import type { NextPage } from "next";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const address = useAddress();
+  const signer = useSigner();
   const connectWithMetamask = useMetamask();
   const disconnectWallet = useDisconnect();
 
@@ -31,44 +33,21 @@ const Home: NextPage = () => {
     }[]
   >([]);
 
-  const signer = useSigner();
-  ``;
-
-  // const [contractSelected, setContractSelected] = useState<ContractType>();
-
-  async function deployContract() {
-    const contractSelected = "nft-collection";
-
-    if (!address || !signer) {
-      return;
-    }
-
-    const thirdweb = new ThirdwebSDK(signer);
-
-    switch (contractSelected) {
-      case "nft-collection":
-        thirdweb?.deployer?.deployNFTCollection({
-          name: "My NFT Collection",
-          primary_sale_recipient: address,
-        });
-
-        break;
-    }
-  }
-
+  // Load the smart contracts whenever the address/signer changes.
   useEffect(() => {
+    // If there's no address, we can't load contracts for this address.
     if (!address || !signer) {
       return;
     }
 
+    // Typically you don't need to pass this signer, we detect it automatically
     const thirdweb = new ThirdwebSDK(signer);
 
+    // Fetch the contracts for this address and set them in state
     thirdweb.getContractList(address).then((contracts) => {
       setExistingContracts(contracts);
     });
   }, [address, signer]);
-
-  console.log("found contracts:", existingContracts);
 
   return (
     <div>
@@ -77,9 +56,10 @@ const Home: NextPage = () => {
           <button onClick={disconnectWallet}>Disconnect Wallet</button>
           <p>Your address: {address}</p>
 
-          {/* Dropdown of each type of contract => map to an item in a dropdown => set state whenever it changes */}
+          <hr />
 
-          <button onClick={deployContract}>deploy</button>
+          <h1>Your Smart Contracts</h1>
+          <Link href="/deploy">Deploy A new contract</Link>
 
           {existingContracts.map((contract) => (
             <p key={contract.address}>
