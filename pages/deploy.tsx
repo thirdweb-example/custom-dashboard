@@ -1,30 +1,22 @@
-import { useAddress, useSigner } from "@thirdweb-dev/react";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { useAddress, useMetamask, useSigner } from "@thirdweb-dev/react";
+import { ContractType, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import React, { useState } from "react";
-
-// Here's a list of contracts that you can deploy.
-const contractsYouCanDeploy = [
-  "nft-collection",
-  "split",
-  "token",
-  "pack",
-  "edition",
-  "edition-drop",
-  "token-drop",
-  "vote",
-  "marketplace",
-  "nft-drop",
-];
+import styles from "../styles/Home.module.css";
+import {
+  contractsToShowOnDeploy as contracts,
+  contractTypeToDisplayNameMapping as nameMapping,
+  contractTypeToImageMapping as imageMapping,
+} from "../const/contractToDisplayMappings";
+import { useRouter } from "next/router";
 
 export default function Deploy() {
+  const router = useRouter();
   const address = useAddress();
   const signer = useSigner();
-
-  // Store the selected contract type in state.
-  const [contractSelected, setContractSelected] = useState<string>();
+  const connectWithMetamask = useMetamask();
 
   // Function to deploy the proxy contract
-  async function deployContract() {
+  async function deployContract(contractSelected: ContractType) {
     if (!address || !signer) {
       return;
     }
@@ -33,10 +25,14 @@ export default function Deploy() {
       alert("Pack is not supported yet");
     }
 
+    alert(
+      `Deploying ${nameMapping[contractSelected]}... Please accept the transaction to continue.`
+    );
+
     const thirdweb = new ThirdwebSDK(signer);
 
     const contractAddress = await thirdweb.deployer.deployBuiltInContract(
-      // @ts-ignore
+      // @ts-ignore - we're excluding custom contracts from the demo
       contractSelected,
       {
         name: `My ${contractSelected}`,
@@ -50,46 +46,65 @@ export default function Deploy() {
     console.log(contractAddress);
 
     alert(`Succesfully deployed ${contractSelected} at ${contractAddress}`);
+
+    router.push(`/`);
   }
 
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        {contractsYouCanDeploy.map((contract) => (
-          <div
-            key={contract}
-            // @ts-ignore
-            onClick={() => setContractSelected(contract)}
-            style={
-              contractSelected === contract
-                ? {
-                    backgroundColor: "red",
-                    width: 100,
-                    padding: 4,
-                    margin: 4,
-                    border: "1px solid red",
-                  }
-                : {
-                    backgroundColor: "white",
-                    width: 100,
-                    padding: 4,
-                    margin: 4,
-                    border: "1px solid red",
-                  }
-            }
-          >
-            {contract}
-          </div>
-        ))}
-      </div>
+    <>
+      {/* Content */}
+      <div className={styles.container}>
+        {/* Top Section */}
+        <h1 className={styles.h1}>thirdweb Custom Dashboard</h1>
+        <p className={styles.explain}>
+          Learn how to dynamically create smart contracts using the thirdweb SDK
+          and view all of the contracts you&apos;ve created, similar to our{" "}
+          <b>
+            <a
+              href="https://thirdweb.com/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.purple}
+            >
+              thirdweb dashboard
+            </a>
+          </b>
+          .
+        </p>
 
-      <button onClick={deployContract}>deploy</button>
-    </div>
+        <hr className={styles.divider} />
+
+        <h2>What do you want to deploy?</h2>
+        {!address ? (
+          <>
+            <p>
+              <b>Connect Your Wallet to deploy a contract</b>
+            </p>
+            <button className={styles.mainButton} onClick={connectWithMetamask}>
+              Connect Wallet
+            </button>
+          </>
+        ) : (
+          <>
+            <div className={styles.contractBoxGrid}>
+              {contracts.map((c) => (
+                <div
+                  className={styles.contractBox}
+                  key={c}
+                  onClick={() => deployContract(c as ContractType)}
+                >
+                  <div className={styles.contractImage}>
+                    <img src={imageMapping[c as ContractType]} alt={c} />
+                  </div>
+                  <b className={styles.cardName}>
+                    {nameMapping[c as ContractType]}
+                  </b>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }

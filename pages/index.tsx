@@ -1,35 +1,24 @@
-import {
-  useAddress,
-  useDisconnect,
-  useMetamask,
-  useSigner,
-} from "@thirdweb-dev/react";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { useAddress, useMetamask, useSigner } from "@thirdweb-dev/react";
+import { ContractType, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import type { NextPage } from "next";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import styles from "../styles/Home.module.css";
+import {
+  contractTypeToDisplayNameMapping as nameMapping,
+  contractTypeToImageMapping as imageMapping,
+} from "../const/contractToDisplayMappings";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const address = useAddress();
   const signer = useSigner();
   const connectWithMetamask = useMetamask();
-  const disconnectWallet = useDisconnect();
 
   const [existingContracts, setExistingContracts] = useState<
     {
       address: string;
-      contractType:
-        | "nft-collection"
-        | "split"
-        | "custom"
-        | "token"
-        | "pack"
-        | "edition"
-        | "edition-drop"
-        | "token-drop"
-        | "vote"
-        | "marketplace"
-        | "nft-drop";
+      contractType: ContractType;
     }[]
   >([]);
 
@@ -50,27 +39,66 @@ const Home: NextPage = () => {
   }, [address, signer]);
 
   return (
-    <div>
-      {address ? (
-        <>
-          <button onClick={disconnectWallet}>Disconnect Wallet</button>
-          <p>Your address: {address}</p>
+    <>
+      {/* Content */}
+      <div className={styles.container}>
+        {/* Top Section */}
+        <h1 className={styles.h1}>thirdweb Custom Dashboard</h1>
+        <p className={styles.explain}>
+          Learn how to dynamically create smart contracts using the thirdweb SDK
+          and view all of the contracts you&apos;ve created, similar to our{" "}
+          <b>
+            <a
+              href="https://thirdweb.com/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.purple}
+            >
+              thirdweb dashboard
+            </a>
+          </b>
+          .
+        </p>
 
-          <hr />
+        <hr className={styles.divider} />
 
-          <h1>Your Smart Contracts</h1>
-          <Link href="/deploy">Deploy A new contract</Link>
-
-          {existingContracts.map((contract) => (
-            <p key={contract.address}>
-              <b>{contract.contractType}</b>: {contract.address}
+        <h2>Your Contracts</h2>
+        {!address ? (
+          <>
+            <p>
+              <b>Connect Your Wallet to view your contracts</b>
             </p>
-          ))}
-        </>
-      ) : (
-        <button onClick={connectWithMetamask}>Connect with Metamask</button>
-      )}
-    </div>
+            <button className={styles.mainButton} onClick={connectWithMetamask}>
+              Connect Wallet
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href="/deploy">
+              <a className={styles.mainButton}>Deploy a Contract</a>
+            </Link>
+            <div className={styles.contractBoxGrid}>
+              {existingContracts.map((c) => (
+                <div className={styles.contractBox} key={c.address}>
+                  <div className={styles.contractImage}>
+                    <img
+                      src={imageMapping[c.contractType]}
+                      alt={c.contractType}
+                    />
+                  </div>
+                  <b className={styles.cardName}>
+                    {nameMapping[c.contractType]}
+                  </b>
+                  <p className={styles.cardDescription}>
+                    {c.address.slice(0, 6) + "..." + c.address.slice(-4)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
