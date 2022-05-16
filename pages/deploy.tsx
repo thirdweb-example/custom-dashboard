@@ -25,10 +25,6 @@ export default function Deploy() {
       alert("Pack is not supported yet");
     }
 
-    alert(
-      `Deploying ${nameMapping[contractSelected]}... Please accept the transaction to continue.`
-    );
-
     const thirdweb = new ThirdwebSDK(signer);
 
     const contractAddress = await thirdweb.deployer.deployBuiltInContract(
@@ -39,6 +35,13 @@ export default function Deploy() {
         primary_sale_recipient: address,
         voting_token_address: address,
         description: `My awesome ${contractSelected} contract`,
+        // Recipients are required when trying to deploy a split contract
+        recipients: [
+          {
+            address,
+            sharesBps: 100 * 100,
+          },
+        ],
       }
     );
 
