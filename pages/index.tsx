@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 
 const Home: NextPage = () => {
+  const router = useRouter();
   const address = useAddress();
   const signer = useSigner();
   const connectWithMetamask = useMetamask();
@@ -79,7 +80,11 @@ const Home: NextPage = () => {
             </Link>
             <div className={styles.contractBoxGrid}>
               {existingContracts.map((c) => (
-                <div className={styles.contractBox} key={c.address}>
+                <div
+                  className={styles.contractBox}
+                  key={c.address}
+                  onClick={() => router.push(`/${c.contractType}/${c.address}`)}
+                >
                   <div className={styles.contractImage}>
                     <img
                       src={imageMapping[c.contractType]}
