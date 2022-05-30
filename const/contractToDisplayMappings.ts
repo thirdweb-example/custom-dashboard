@@ -38,6 +38,8 @@ const contractsToShowOnDeploy = [
   "vote",
   "marketplace",
   "nft-drop",
+  // "multi-wrap",
+  // "signature-drop",
 ];
 
 export {

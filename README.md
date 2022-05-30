@@ -1,39 +1,89 @@
-## Getting Started
+# Custom Dashboard
 
-First, intall the required dependencies:
+This example demonstrates the thirdweb SDK's capability to deploy any of our [pre-built smart contracts](https://portal.thirdweb.com/pre-built-contracts)!
 
-```bash
-npm install
-# or
-yarn install
+We use the [`ContractDeployer class`](https://portal.thirdweb.com/typescript/sdk.contractdeployer) and the `deployBuiltInContract` function to deploy the contracts, and use the `sdk.getContractList` to view all the contracts we deployed so far!
+
+This example can be utilized in projects that you want users to deploy smart contracts via your application dynamically, rather than the thirdweb dashboard.
+
+## Tools
+
+- [**thirdweb TypeScript SDK**](https://portal.thirdweb.com/typescript/): to access the [ContractDeployer class](https://portal.thirdweb.com/typescript/sdk.contractdeployer) and view the deployed contracts.
+
+- [**thirdweb React SDK**](https://portal.thirdweb.com/react/): to allow users to connect their wallet to the website using the [useMetamask](https://portal.thirdweb.com/react/react.usemetamask) hook, and view their wallet information using [useAddress](https://portal.thirdweb.com/react/react.useaddress).
+
+## Using This Repo
+
+- Clone this repository
+
+- Run `npm install` to install the dependencies.
+
+- Run `npm run dev` to start the development server.
+
+- Visit http://localhost:3000
+
+## Guide
+
+We'll explore the details of how this repository works below.
+
+### Viewing Deployed Contracts
+
+On the [index.tsx](pages/index.tsx) page, we use the [`.getContractList`](https://portal.thirdweb.com/typescript/sdk.thirdwebsdk.getcontractlist#thirdwebsdkgetcontractlist-method) function to view all the contracts we deployed so far:
+
+```jsx
+// Get the signer of the currently connected wallet
+const signer = useSigner();
+
+// Instantiate the SDK with the signer
+const thirdweb = new ThirdwebSDK(signer);
+
+// Fetch the contracts for this address and set them in state using the SDK
+thirdweb.getContractList(address).then((contracts) => {
+  // set the contracts in state
+  setExistingContracts(contracts);
+});
 ```
 
-Then, run the development server:
+### Deploying Contracts
 
-```bash
-npm run dev
-# or
-yarn dev
+On the [deploy.tsx](pages/deploy.tsx) page, we use the [`.deployBuiltInContract`] function to deploy a contract, which is a generic function to deploy _any_ pre-built contract.
+
+Typically, you know which contract you want your users to deploy, so it's more helpful to use one of the methods exposed on the [ContractDeployer class](https://portal.thirdweb.com/typescript/sdk.contractdeployer#contractdeployer-class).
+
+Such as:
+
+- [deployNFTDrop](https://portal.thirdweb.com/typescript/sdk.contractdeployer.deploynftdrop)
+- [deployToken](https://portal.thirdweb.com/typescript/sdk.contractdeployer.deploytoken)
+- [deployMarketplace](https://portal.thirdweb.com/typescript/sdk.contractdeployer.deploymarketplace)
+
+On each of these pages, you can find code examples to help you deploy the contract.
+
+To make the code generic for this example project, we used the `internal` function from the SDK `deployBuiltInContract`, which calls each of these functions under the hood, depending on which contract you pass in as a parameter.
+
+Here's how it looks:
+
+```jsx
+const signer = useSigner();
+
+const thirdweb = new ThirdwebSDK(signer);
+
+const contractAddress = await thirdweb.deployer.deployBuiltInContract(
+  contractSelected,
+  {
+    name: `My ${contractSelected}`,
+    primary_sale_recipient: address,
+    voting_token_address: address,
+    description: `My awesome ${contractSelected} contract`,
+    // Recipients are required when trying to deploy a split contract
+    recipients: [
+      {
+        address,
+        sharesBps: 100 * 100,
+      },
+    ],
+  }
+);
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-On `pages/_app.tsx`, you'll find our `ThirdwebProvider` wrapping your app, this is necessary for our hooks to work.
-
-on `pages/index.tsx`, you'll find the `useMetamask` hook that we use to connect the user's wallet to MetaMask, `useDisconnect` that we use to disconnect it, and `useAddress` to check the user's wallet address once connected. 
-
-## Learn More
-
-To learn more about thirdweb and Next.js, take a look at the following resources:
-
-- [thirdweb React Documentation](https://docs.thirdweb.com/react) - learn about our React SDK.
-- [thirdweb TypeScript Documentation](https://docs.thirdweb.com/typescript) - learn about our JavaScript/TypeScript SDK.
-- [thirdweb Portal](https://docs.thirdweb.com) - check our guides and development resources.
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-
-You can check out [the thirdweb GitHub organization](https://github.com/thirdweb-dev) - your feedback and contributions are welcome!
 
 ## Join our Discord!
 
