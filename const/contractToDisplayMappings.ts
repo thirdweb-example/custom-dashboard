@@ -10,6 +10,8 @@ const contractTypeToDisplayNameMapping = {
   marketplace: "Marketplace",
   pack: "Pack",
   custom: "Custom",
+  multiwrap: "Multiwrap",
+  "signature-drop": "Signature Drop",
 };
 
 const contractTypeToImageMapping = {
@@ -24,6 +26,8 @@ const contractTypeToImageMapping = {
   marketplace: `icons/marketplace.webp`,
   pack: `icons/pack.webp`,
   custom: `icons/custom.svg`,
+  multiwrap: `icons/general.webp`,
+  "signature-drop": `icons/signature-drop.webp`,
 };
 
 // Here's a list of contracts that you can deploy.
