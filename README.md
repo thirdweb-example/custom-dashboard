@@ -14,13 +14,11 @@ This example can be utilized in projects that you want users to deploy smart con
 
 ## Using This Repo
 
-- Clone this repository
+- Create a project using this example by running:
 
-- Run `npm install` to install the dependencies.
-
-- Run `npm run dev` to start the development server.
-
-- Visit http://localhost:3000
+```bash
+npx create-tw-app --example custom-dashboard
+```
 
 ## Guide
 
