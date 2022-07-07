@@ -17,7 +17,7 @@ This example can be utilized in projects that you want users to deploy smart con
 - Create a project using this example by running:
 
 ```bash
-npx thirdweb create --example custom-dashboard
+npx thirdweb create --template custom-dashboard
 ```
 
 ## Guide
