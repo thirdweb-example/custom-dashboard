@@ -1,21 +1,21 @@
-import { useAddress, useMetamask, useSigner } from "@thirdweb-dev/react";
-import { ContractType, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { useEffect, useState } from "react";
+import { ConnectWallet, useAddress, useSDK } from "@thirdweb-dev/react";
+import { ContractType } from "@thirdweb-dev/sdk";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import styles from "../styles/Home.module.css";
 import {
   contractTypeToDisplayNameMapping as nameMapping,
   contractTypeToImageMapping as imageMapping,
 } from "../const/contractToDisplayMappings";
 import Link from "next/link";
+import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   const router = useRouter();
   const address = useAddress();
-  const signer = useSigner();
-  const connectWithMetamask = useMetamask();
+  const sdk = useSDK();
 
+  const [loading, setLoading] = useState(true);
   const [existingContracts, setExistingContracts] = useState<
     {
       address: string;
@@ -26,18 +26,18 @@ const Home: NextPage = () => {
   // Load the smart contracts whenever the address/signer changes.
   useEffect(() => {
     // If there's no address, we can't load contracts for this address.
-    if (!address || !signer) {
+    if (!address || !sdk) {
       return;
     }
 
-    // Typically you don't need to pass this signer, we detect it automatically
-    const thirdweb = new ThirdwebSDK(signer);
-
     // Fetch the contracts for this address and set them in state
-    thirdweb.getContractList(address).then((contracts) => {
-      setExistingContracts(contracts);
-    });
-  }, [address, signer]);
+    sdk
+      .getContractList(address)
+      .then((contracts) => {
+        setExistingContracts(contracts);
+      })
+      .finally(() => setLoading(false));
+  }, [address, sdk]);
 
   return (
     <>
@@ -55,7 +55,7 @@ const Home: NextPage = () => {
               rel="noopener noreferrer"
               className={styles.purple}
             >
-              thirdweb dashboard
+              dashboard
             </a>
           </b>
           .
@@ -69,9 +69,7 @@ const Home: NextPage = () => {
             <p>
               <b>Connect Your Wallet to view your contracts</b>
             </p>
-            <button className={styles.mainButton} onClick={connectWithMetamask}>
-              Connect Wallet
-            </button>
+            <ConnectWallet accentColor="#F213A4">Connect Wallet</ConnectWallet>
           </>
         ) : (
           <>
@@ -79,6 +77,7 @@ const Home: NextPage = () => {
               <a className={styles.mainButton}>Deploy a Contract</a>
             </Link>
             <div className={styles.contractBoxGrid}>
+              {loading && <p>Loading...</p>}
               {existingContracts.map((c) => (
                 <div
                   className={styles.contractBox}
@@ -87,11 +86,13 @@ const Home: NextPage = () => {
                 >
                   <div className={styles.contractImage}>
                     <img
+                      // @ts-ignore
                       src={imageMapping[c.contractType]}
                       alt={c.contractType}
                     />
                   </div>
                   <b className={styles.cardName}>
+                    {/* @ts-ignore */}
                     {nameMapping[c.contractType]}
                   </b>
                   <p className={styles.cardDescription}>

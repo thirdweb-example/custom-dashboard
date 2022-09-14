@@ -1,6 +1,6 @@
-import { useAddress, useMetamask, useSigner } from "@thirdweb-dev/react";
-import { ContractType, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import React, { useState } from "react";
+import React from "react";
+import { ConnectWallet, useAddress, useSDK } from "@thirdweb-dev/react";
+import { ContractType } from "@thirdweb-dev/sdk";
 import styles from "../styles/Home.module.css";
 import {
   contractsToShowOnDeploy as contracts,
@@ -12,22 +12,15 @@ import { useRouter } from "next/router";
 export default function Deploy() {
   const router = useRouter();
   const address = useAddress();
-  const signer = useSigner();
-  const connectWithMetamask = useMetamask();
+  const sdk = useSDK();
 
   // Function to deploy the proxy contract
   async function deployContract(contractSelected: ContractType) {
-    if (!address || !signer) {
+    if (!address || !sdk) {
       return;
     }
 
-    if (contractSelected === "pack") {
-      alert("Pack is not supported yet");
-    }
-
-    const thirdweb = new ThirdwebSDK(signer);
-
-    const contractAddress = await thirdweb.deployer.deployBuiltInContract(
+    const contractAddress = await sdk.deployer.deployBuiltInContract(
       // @ts-ignore - we're excluding custom contracts from the demo
       contractSelected,
       {
@@ -83,9 +76,7 @@ export default function Deploy() {
             <p>
               <b>Connect Your Wallet to deploy a contract</b>
             </p>
-            <button className={styles.mainButton} onClick={connectWithMetamask}>
-              Connect Wallet
-            </button>
+            <ConnectWallet accentColor="#F213A4">Connect Wallet</ConnectWallet>
           </>
         ) : (
           <>

@@ -15,19 +15,19 @@ const contractTypeToDisplayNameMapping = {
 };
 
 const contractTypeToImageMapping = {
+  "signature-drop": `icons/signature-drop.webp`,
   "nft-drop": `icons/drop.webp`,
-  "nft-collection": `icons/nft-collection.webp`,
   "edition-drop": `icons/drop.webp`,
+  "nft-collection": `icons/nft-collection.webp`,
   edition: `icons/nft-collection.webp`,
-  "token-drop": `icons/token.webp`,
   token: `icons/drop.webp`,
-  vote: `icons/vote.webp`,
+  "token-drop": `icons/token.webp`,
   split: `icons/splits.webp`,
+  vote: `icons/vote.webp`,
   marketplace: `icons/marketplace.webp`,
   pack: `icons/pack.webp`,
-  custom: `icons/custom.svg`,
   multiwrap: `icons/general.webp`,
-  "signature-drop": `icons/signature-drop.webp`,
+  custom: `icons/custom.svg`,
 };
 
 // Here's a list of contracts that you can deploy.

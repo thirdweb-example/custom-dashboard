@@ -1,7 +1,7 @@
-import { useBuiltinContract } from "@thirdweb-dev/react";
+import React from "react";
+import { useContract } from "@thirdweb-dev/react";
 import { ContractType } from "@thirdweb-dev/sdk";
 import { useRouter } from "next/router";
-import React from "react";
 import { contractTypeToDisplayNameMapping } from "../../const/contractToDisplayMappings";
 import styles from "../../styles/Home.module.css";
 
@@ -15,10 +15,7 @@ export default function ContractPage({}: Props) {
   // e.g. if you just want to view an nft-collection, then you can use the `useNftCollection` hook instead of `useContract`.
   // this will return an nft-collection object, which has all of the functions of the nft-collection contract.
   // and provide you with a lot more functionality
-  const myContract = useBuiltinContract(
-    contractType as ContractType,
-    contractAddress as string
-  );
+  const myContract = useContract(contractAddress as string);
 
   console.log(myContract);
 

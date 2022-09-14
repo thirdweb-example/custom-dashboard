@@ -22,28 +22,6 @@ export default function Header() {
           </Link>
         </div>
       </div>
-
-      <div className={styles.right}>
-        {address ? (
-          <>
-            <a
-              className={styles.secondaryButton}
-              onClick={() => disconnectWallet()}
-            >
-              Disconnect
-            </a>
-            <p className={styles.verticalSpacer}>|</p>
-            <p>{address.slice(0, 6).concat("...").concat(address.slice(-4))}</p>
-          </>
-        ) : (
-          <a
-            className={styles.mainButton}
-            onClick={() => connectWithMetamask()}
-          >
-            Connect Wallet
-          </a>
-        )}
-      </div>
     </div>
   );
 }
