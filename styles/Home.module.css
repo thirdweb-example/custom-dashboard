@@ -396,8 +396,8 @@
 }
 
 .headerLogo {
-  width: 135px;
   cursor: pointer;
+  object-fit: contain ;
 }
 
 .verticalSpacer {

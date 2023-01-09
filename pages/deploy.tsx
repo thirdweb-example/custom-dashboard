@@ -76,7 +76,7 @@ export default function Deploy() {
             <p>
               <b>Connect Your Wallet to deploy a contract</b>
             </p>
-            <ConnectWallet accentColor="#F213A4">Connect Wallet</ConnectWallet>
+            <ConnectWallet accentColor="#F213A4" />
           </>
         ) : (
           <>

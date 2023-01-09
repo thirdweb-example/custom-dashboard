@@ -69,12 +69,12 @@ const Home: NextPage = () => {
             <p>
               <b>Connect Your Wallet to view your contracts</b>
             </p>
-            <ConnectWallet accentColor="#F213A4">Connect Wallet</ConnectWallet>
+            <ConnectWallet accentColor="#F213A4" />
           </>
         ) : (
           <>
-            <Link href="/deploy">
-              <a className={styles.mainButton}>Deploy a Contract</a>
+            <Link href="/deploy" className={styles.mainButton}>
+              Deploy a Contract
             </Link>
             <div className={styles.contractBoxGrid}>
               {loading && <p>Loading...</p>}
