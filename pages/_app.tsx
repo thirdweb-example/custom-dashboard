@@ -1,6 +1,6 @@
 import React from "react";
 import type { AppProps } from "next/app";
-import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
+import { ThirdwebProvider } from "@thirdweb-dev/react";
 import Header from "../components/Header";
 import Head from "next/head";
 import "../styles/globals.css";
