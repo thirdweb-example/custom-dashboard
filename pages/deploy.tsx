@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ConnectWallet, useAddress, useSDK } from "@thirdweb-dev/react";
-import { ContractType } from "@thirdweb-dev/sdk";
+import { ConnectWallet, useAddress, useChainId, useSDK } from "@thirdweb-dev/react";
+import { ChainId, ContractType } from "@thirdweb-dev/sdk";
 import styles from "../styles/Home.module.css";
 import {
   contractsToShowOnDeploy as contracts,
@@ -15,6 +15,20 @@ export default function Deploy() {
   const sdk = useSDK();
   const [isLoading, setIsLoading] = useState(false);
   const [isBlurred, setIsBlurred] = useState(false);
+
+  const chainId = useChainId();
+  let chainName = "";
+  if (chainId === ChainId.Mumbai) {
+    chainName = "mumbai";
+  } else if (chainId === ChainId.Polygon) {
+    chainName = "polygon";
+  } else if (chainId === ChainId.Mainnet) {
+    chainName = "ethereum";
+  } else if (chainId === ChainId.BinanceSmartChainMainnet) {
+    chainName = "binance";
+  } else if (chainId === 8453) {
+    chainName = "base"
+  }
 
   async function deployContract(contractSelected: ContractType) {
     if (!address || !sdk) {
@@ -49,7 +63,7 @@ export default function Deploy() {
 
     alert(`Successfully deployed ${contractSelected} at ${contractAddress}`);
 
-    const newTabUrl = `https://thirdweb.com/mumbai/${contractAddress}`;
+    const newTabUrl = `https://thirdweb.com/${chainName}/${contractAddress}`;
     const newTab = window.open(newTabUrl, "_blank");
 
     if (newTab) {
