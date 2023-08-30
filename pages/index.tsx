@@ -33,9 +33,6 @@ const Home: NextPage = () => {
     // Fetch the contracts for this address and set them in state
     sdk
       .getContractList(address)
-      .then((contracts) => {
-        setExistingContracts(contracts);
-      })
       .finally(() => setLoading(false));
   }, [address, sdk]);
 
@@ -69,7 +66,7 @@ const Home: NextPage = () => {
             <p>
               <b>Connect Your Wallet to view your contracts</b>
             </p>
-            <ConnectWallet accentColor="#F213A4" />
+            <ConnectWallet />
           </>
         ) : (
           <>
