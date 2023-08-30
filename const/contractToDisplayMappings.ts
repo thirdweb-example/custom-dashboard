@@ -7,11 +7,12 @@ const contractTypeToDisplayNameMapping = {
   token: "Token",
   vote: "Vote",
   split: "Split",
-  marketplace: "Marketplace",
   pack: "Pack",
   custom: "Custom",
   multiwrap: "Multiwrap",
   "signature-drop": "Signature Drop",
+  "marketplace-v3": "Marketplace v3",
+  "marketplace": "Marketplace",
 };
 
 const contractTypeToImageMapping = {
@@ -24,7 +25,8 @@ const contractTypeToImageMapping = {
   "token-drop": `icons/token.webp`,
   split: `icons/splits.webp`,
   vote: `icons/vote.webp`,
-  marketplace: `icons/marketplace.webp`,
+  "marketplace-v3": `icons/marketplace.webp`,
+  "marketplace": `icons/marketplace.webp`,
   pack: `icons/pack.webp`,
   multiwrap: `icons/general.webp`,
   custom: `icons/custom.svg`,
@@ -40,8 +42,8 @@ const contractsToShowOnDeploy = [
   "edition-drop",
   "token-drop",
   "vote",
-  "marketplace",
   "nft-drop",
+  "marketplace-v3",
   // "multi-wrap",
   // "signature-drop",
 ];

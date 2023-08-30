@@ -6,11 +6,13 @@ import Head from "next/head";
 import "../styles/globals.css";
 
 // This is the chainId your dApp will work on.
-const activeChainId = ChainId.Mumbai;
+const activeChain = "mumbai";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThirdwebProvider desiredChainId={activeChainId}>
+    <ThirdwebProvider 
+      activeChain={activeChain} 
+      clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENTID}>
       <Head>
         <title>thirdweb Custom Dashboard Example</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
